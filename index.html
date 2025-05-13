@@ -293,7 +293,7 @@ function speak(text) {
 
 
 function handleVoiceCommand(command) {
-const threshold = 0.6; // similarity ৬০% এর বেশি হলে মিল ধরে নেবে
+const threshold = 0.75; // similarity ৬০% এর বেশি হলে মিল ধরে নেবে
 
   const commandMap = [
     { keywords: ["লাইট অন", "লাইট চালু কর", "লাইট জ্বালাও", "লাইট চালু হয়ে যাবে", "লাইট চালু হয়ে যাক"], app: "app1", pin: 3, state: 1, response: "লাইট চালু করা হয়েছে" },
