@@ -172,8 +172,6 @@ h2 {
   <button id="app2_btn4" class="toggle-btn off" onclick="toggle('app2', 4)">Mic: OFF</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/string-similarity/umd/string-similarity.min.js"></script>
-
   <script>
     const apps = {
   app1: {
@@ -293,8 +291,6 @@ function speak(text) {
 
 
 function handleVoiceCommand(command) {
-const threshold = 0.75; // similarity ৬০% এর বেশি হলে মিল ধরে নেবে
-
   const commandMap = [
     { keywords: ["লাইট অন", "লাইট চালু কর", "লাইট জ্বালাও", "লাইট চালু হয়ে যাবে", "লাইট চালু হয়ে যাক"], app: "app1", pin: 3, state: 1, response: "লাইট চালু করা হয়েছে" },
     { keywords: ["লাইট বন্ধ", "লাইট অফ", "লাইট বন্ধ কর", "লাইট বন্ধ হয়ে যাক", "লাইট বন্ধ হয়ে যাবে", "লাইট অফ কর", "লাইট অফ করো"], app: "app1", pin: 3, state: 0, response: "লাইট বন্ধ করা হয়েছে" },
@@ -309,15 +305,11 @@ const threshold = 0.75; // similarity ৬০% এর বেশি হলে ম�
     { keywords: ["মাইক অফ", "মাইক বন্ধ", "মাইক বন্ধ কর", "মাইক বন্ধ হয়ে যাক", "মাইক বন্ধ হয়ে যাবে", "মাইক বন্ধ হয়ে যাও", "মাইক অফ করো", "মাইক অফ হয়ে যাক", "মাইক অফ হয়ে যাবে"], app: "app2", pin: 4, state: 0, response: "মাইক বন্ধ হয়েছে" }
   ];
 
-    for (const item of commandMap) {
-    for (const keyword of item.keywords) {
-      const similarity = stringSimilarity.compareTwoStrings(command, keyword);
-      if (similarity >= threshold) {
-        toggle(item.app, item.pin, item.state);
-        speak(item.response);
-        console.log(`✅ Fuzzy matched: "${command}" ≈ "${keyword}" (score: ${similarity})`);
-        return;
-      }
+  for (const item of commandMap) {
+    if (item.keywords.some(keyword => command.includes(keyword))) {
+      toggle(item.app, item.pin, item.state);
+      speak(item.response); // 🗣️ বাংলা উত্তর বলবে
+      return;
     }
   }
 
