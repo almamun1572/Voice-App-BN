@@ -172,15 +172,6 @@ h2 {
   <button id="app2_btn4" class="toggle-btn off" onclick="toggle('app2', 4)">Mic: OFF</button>
 </div>
 
-<!-- App 3 Section -->
-<div class="section">
-  <h2>SmartPlug (App 3)</h2>
-  <button id="app3_btn1" class="toggle-btn off" onclick="toggle('app3', 1)">Iphone: OFF</button>
-  <button id="app3_btn2" class="toggle-btn off" onclick="toggle('app3', 2)">Infinix: OFF</button>
-  <button id="app3_btn3" class="toggle-btn off" onclick="toggle('app3', 3)">HeadPhone: OFF</button>
-  <button id="app3_btn4" class="toggle-btn off" onclick="toggle('app3', 4)">Laptop: OFF</button>
-</div>
-
   <script>
     const apps = {
   app1: {
@@ -189,10 +180,6 @@ h2 {
   },
   app2: {
     token: "B3zGySOexKemlM6Sj_FV4w1Cw3PYPGi2",
-    states: { 1: 0, 2: 0, 3: 0, 4: 0 }
-  },
- app3: {
-    token: "grCUresk7BXfnMLh7CQAHNoWYqr4yOPE",
     states: { 1: 0, 2: 0, 3: 0, 4: 0 }
   }
 };
@@ -209,12 +196,6 @@ const labelMap = {
     2: "Motor",
     3: "Relay 3",
     4: "Mic"
-  },
- app3: {
-    1: "Iphone",
-    2: "Infinix",
-    3: "HeadPhone",
-    4: "Laptop"
   }
 };
 
@@ -268,56 +249,27 @@ function setupVoiceRecognition() {
   });
 }
 
+
+
+
 function startRecognition() {
   const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  recognition.lang = 'en-US';
+  recognition.lang = 'bn-BD';
   recognition.continuous = true;
   recognition.interimResults = false;
 
-  recognition.onresult = function(event) {
+  recognition.onresult = function (event) {
     const command = event.results[event.results.length - 1][0].transcript.toLowerCase();
     console.log("Voice command:", command);
     document.getElementById("voiceOutput").textContent = "You said: " + command;
+    handleVoiceCommand(command);
+  };
 
- // Voice command mapping
-        if (command.includes("light on")) toggle("app1", 3, 1);
-
-        else if (command.includes("light off")) toggle("app1", 3, 0);
-        else if (command.includes("light of")) toggle("app1", 3, 0);
-        else if (command.includes("light up")) toggle("app1", 3, 0);
-          
-        else if (command.includes("hen on")) toggle("app1", 4, 1);
-        else if (command.includes("pen on")) toggle("app1", 4, 1);
-        else if (command.includes("fan on")) toggle("app1", 4, 1);
-        else if (command.includes("fan one")) toggle("app1", 4, 1);
-        else if (command.includes("hand on")) toggle("app1", 4, 1);
-
-        else if (command.includes("hen off")) toggle("app1", 4, 0);
-        else if (command.includes("pen off")) toggle("app1", 4, 0);
-        else if (command.includes("fan off")) toggle("app1", 4, 0);
-        else if (command.includes("fan up")) toggle("app1", 4, 0);
-        else if (command.includes("fan of")) toggle("app1", 4, 0);
-        else if (command.includes("hand of")) toggle("app1", 4, 0);
-        else if (command.includes("hang up")) toggle("app1", 4, 0);
-        else if (command.includes("pan off")) toggle("app1", 4, 0);
-
-        else if (command.includes("motor on")) toggle("app2", 2, 1);
-        else if (command.includes("motor off")) toggle("app2", 2, 0);
-        else if (command.includes("motor of")) toggle("app2", 2, 0);
-
-        else if (command.includes("mic on")) toggle("app2", 4, 1);
-        else if (command.includes("mic of")) toggle("app2", 4, 0);
-        else if (command.includes("mic off")) toggle("app2", 4, 0);
-
-    
-    };
-
-
-  recognition.onerror = function(event) {
+  recognition.onerror = function (event) {
     console.error("Speech Recognition Error:", event.error);
   };
 
-  recognition.onend = function() {
+  recognition.onend = function () {
     console.log("Speech ended. Restarting...");
     recognition.start(); // 🔁 আবার চালু
   };
@@ -327,6 +279,48 @@ function startRecognition() {
   document.getElementById("startVoice").disabled = true;
   document.getElementById("startVoice").textContent = "🎤 Voice Active";
 }
+
+
+
+
+function speak(text) {
+  // স্ক্রিনে দেখানোর জন্য
+  const outputDiv = document.getElementById("voiceOutput");
+  outputDiv.textContent = `রেসপন্স: ${text}`;
+}
+
+
+function handleVoiceCommand(command) {
+  const commandMap = [
+    { keywords: ["লাইট অন", "লাইট চালু কর", "লাইট জ্বালাও", "লাইট চালু হয়ে যাবে", "লাইট চালু হয়ে যাক"], app: "app1", pin: 3, state: 1, response: "লাইট চালু করা হয়েছে" },
+    { keywords: ["লাইট বন্ধ", "লাইট অফ", "লাইট বন্ধ কর", "লাইট বন্ধ হয়ে যাক", "লাইট বন্ধ হয়ে যাবে", "লাইট অফ কর", "লাইট অফ করো"], app: "app1", pin: 3, state: 0, response: "লাইট বন্ধ করা হয়েছে" },
+
+    { keywords: ["ফ্যান অন", "ফ্যান চালু কর", "ফ্যান চালাও", "ফ্যান চালু হয়ে যাবে", "ফ্যান চালু হয়ে যাক", "ফ্যান অন কর", "ফ্যান অন হয়ে যাবে", "ফ্যান অন হয়ে যাক", "হ্যান্ডঅন"], app: "app1", pin: 4, state: 1, response: "ফ্যান চালু করা হয়েছে" },
+    { keywords: ["ফ্যান বন্ধ", "ফ্যান অফ", "ফ্যান বন্ধ কর", "ফ্যান বন্ধ হয়ে যাক", "ফ্যান বন্ধ হয়ে যাবে", "ফ্যান অফ কর", "ফ্যান অফ করো", "ফ্যান অফ হয়ে যাবে", "ফ্যান অফ হয়ে যাক", "হ্যান্ড অফ", "হ্যান্ড অফ কর", "হেন অফ কর"], app: "app1", pin: 4, state: 0, response: "ফ্যান বন্ধ করা হয়েছে" },
+
+    { keywords: ["মোটর অন", "মটর অন", "মটর অন করো", "মোটর চালু কর", "মোটর চালু হয়ে যাও", "মোটর চালু হয়ে যাবে", "মোটর চালু হয়ে যাক", "মোটর অন হয়ে যাবে", "মোটর অন হয়ে যাক"], app: "app2", pin: 2, state: 1, response: "মোটর চালু হয়েছে" },
+    { keywords: ["মোটর অফ", "মটর অফ", "মোটর বন্ধ", "মটর বন্ধ", "মোটর বন্ধ কর", "মোটর বন্ধ হয়ে যাক", "মোটর বন্ধ হয়ে যাবে", "মোটর অফ কর", "মোটর অফ হয়ে যাও", "মোটর অফ হয়ে যাবে", "মটর বন্ধ হয়ে যাও"], app: "app2", pin: 2, state: 0, response: "মোটর বন্ধ হয়েছে" },
+
+    { keywords: ["মাইক অন", "মাইক চালু কর", "মাইক অন কর"], app: "app2", pin: 4, state: 1, response: "মাইক চালু হয়েছে" },
+    { keywords: ["মাইক অফ", "মাইক বন্ধ", "মাইক বন্ধ কর", "মাইক বন্ধ হয়ে যাক", "মাইক বন্ধ হয়ে যাবে", "মাইক বন্ধ হয়ে যাও", "মাইক অফ করো", "মাইক অফ হয়ে যাক", "মাইক অফ হয়ে যাবে"], app: "app2", pin: 4, state: 0, response: "মাইক বন্ধ হয়েছে" }
+  ];
+
+  for (const item of commandMap) {
+    if (item.keywords.some(keyword => command.includes(keyword))) {
+      toggle(item.app, item.pin, item.state);
+      speak(item.response); // 🗣️ বাংলা উত্তর বলবে
+      return;
+    }
+  }
+
+  // যদি কোনো কমান্ড না মেলে
+  console.log("❗ অপরিচিত কমান্ড:", command);
+
+}
+
+
+
+
 
 // ✅ প্রথমবার ক্লিক করার জন্য event listener
 document.getElementById("startVoice").addEventListener("click", setupVoiceRecognition);
